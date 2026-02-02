@@ -1,0 +1,15 @@
+{
+  "timestamp": 1770065403892,
+  "operation": {
+    "id": "settings:config:package"
+  },
+  "projectId": "build-a-responsive-web-app-called",
+  "files": [
+    {
+      "path": "/mnt/data/build-a-responsive-web-app-called/backend/.env",
+      "type": "text",
+      "size": 347,
+      "dependencies": false
+    }
+  ]
+}
