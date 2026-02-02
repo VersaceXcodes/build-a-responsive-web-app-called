@@ -1,0 +1,53 @@
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/launchpulse-ai/build-a-responsive-web-app-called:$COMMIT_SHA'
+      - '-t'
+      - 'gcr.io/launchpulse-ai/build-a-responsive-web-app-called:latest'
+      - '.'
+
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/launchpulse-ai/build-a-responsive-web-app-called:$COMMIT_SHA'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/launchpulse-ai/build-a-responsive-web-app-called:latest'
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'build-a-responsive-web-app-called'
+      - '--image'
+      - 'gcr.io/launchpulse-ai/build-a-responsive-web-app-called:$COMMIT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8080'
+      - '--memory'
+      - '512Mi'
+      - '--cpu'
+      - '1'
+      - '--min-instances'
+      - '0'
+      - '--max-instances'
+      - '10'
+
+images:
+  - 'gcr.io/launchpulse-ai/build-a-responsive-web-app-called:$COMMIT_SHA'
+  - 'gcr.io/launchpulse-ai/build-a-responsive-web-app-called:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
